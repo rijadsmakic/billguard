@@ -8,7 +8,9 @@ import { LanguageSelector, type Translate } from "./language-selector";
 import { ComplaintFlow, type DemoCase } from "./complaint-flow";
 import { CaseDashboard } from "./case-dashboard";
 import { translate } from "@/lib/translations";
-type View = "home" | "complaint" | "cases" | "account";
+import { demoScenarios } from "@/lib/demo-scenarios";
+import { DemoCaseDetail } from "./demo-case-detail";
+type View = "home" | "complaint" | "cases" | "account" | "demo";
 export function BillGuardApp() {
   const [view, setView] = useState<View>("home");
   const [locale, setLocale] = useState("nb");
@@ -16,32 +18,19 @@ export function BillGuardApp() {
   const [category, setCategory] = useState<number | undefined>();
   const [selectedCase, setSelectedCase] = useState<DemoCase | undefined>();
   const [flowKey, setFlowKey] = useState(0);
-  const [cases, setCases] = useState<DemoCase[]>([
-    {
-      id: "sample-1",
-      title: "Feil belastning etter oppsigelse",
-      category: 1,
-      status: 5,
-      deadline: "2026-11-14",
-      documents: ["Faktura-november.pdf", "Avtalevilkår.pdf"],
-    },
-    {
-      id: "sample-2",
-      title: "Avslag på reiseforsikring",
-      category: 0,
-      status: 4,
-      deadline: "2026-11-21",
-      documents: ["Forsikringsbrev.pdf"],
-    },
-    {
-      id: "sample-3",
-      title: "Reklamasjon på hodetelefoner",
-      category: 2,
-      status: 6,
-      deadline: "2026-10-30",
-      documents: ["Kvittering.pdf"],
-    },
-  ]);
+  const [cases, setCases] = useState<DemoCase[]>(() =>
+    demoScenarios.map((s) => ({
+      id: `scenario-${s.id}`,
+      scenarioId: s.id,
+      title: s.title,
+      category: s.category,
+      status: 2,
+      deadline: "",
+      documents: s.documents.map((d) => d.name),
+      draft: s.draft,
+      submissionConfirmed: false,
+    })),
+  );
   const t: Translate = (nb, en) => translate(locale, nb, en);
   useEffect(() => {
     const value = document.cookie
@@ -110,6 +99,9 @@ export function BillGuardApp() {
             <button onClick={() => navigate("cases")}>
               {t("Mine saker", "My cases")}
             </button>
+            <button onClick={() => navigate("cases")}>
+              {t("Prøv demosakene", "Try demo cases")}
+            </button>
             <button onClick={() => section("about")}>
               {t("Om BillGuard", "About BillGuard")}
             </button>
@@ -154,6 +146,14 @@ export function BillGuardApp() {
                   onSave={save}
                   onBack={() => navigate("home")}
                 />
+              ) : view === "demo" && selectedCase ? (
+                <DemoCaseDetail
+                  key={selectedCase.id}
+                  caseData={selectedCase}
+                  t={t}
+                  onUpdate={save}
+                  onBack={() => navigate("cases")}
+                />
               ) : view === "cases" ? (
                 <CaseDashboard
                   t={t}
@@ -164,7 +164,7 @@ export function BillGuardApp() {
                     setSelectedCase(c);
                     setCategory(c.category);
                     setFlowKey((k) => k + 1);
-                    navigate("complaint");
+                    navigate(c.scenarioId ? "demo" : "complaint");
                   }}
                 />
               ) : (

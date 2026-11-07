@@ -421,5 +421,6 @@ export function translate(
   key: string,
   fallback: string,
 ): string {
+  if (locale === "nb") return dictionaries.nb[key] ?? key;
   return dictionaries[locale]?.[key] ?? dictionaries.en[key] ?? fallback;
 }

@@ -27,6 +27,8 @@ export type DemoCase = {
   deadline: string;
   documents: string[];
   draft?: string;
+  scenarioId?: string;
+  submissionConfirmed?: boolean;
 };
 export type UploadHandler = (files: File[]) => void;
 export function DocumentUploader({
@@ -602,17 +604,19 @@ function AskBillGuard({ t }: { t: Translate }) {
     </div>
   );
 }
-function ComplaintEditor({
+export function ComplaintEditor({
   t,
   onSave,
   initialDraft,
+  scenarioTemplates,
 }: {
   t: Translate;
   onSave: (draft: string) => void;
   initialDraft?: string;
+  scenarioTemplates?: { nb: string; en: string };
 }) {
   const [lang, setLang] = useState("nb");
-  const templates = {
+  const templates = scenarioTemplates ?? {
     nb: "Til kundeservice\n\nEmne: Klage på belastning etter oppsigelse\n\nJeg viser til en belastning på 499 kr etter at abonnementet mitt ble sagt opp.\n\nJeg ber dere undersøke belastningen og opplyse om hvilket avtalegrunnlag dere har benyttet. Jeg viser til oppsigelsesbekreftelsen og fakturaen, som jeg vil legge ved før innsending.\n\nDersom belastningen er feil, ber jeg om tilbakebetaling av 499 kr. Vennligst gi et skriftlig svar innen 14 dager.\n\nMed vennlig hilsen\n[Navnet ditt]",
     en: "To Customer Service\n\nSubject: Complaint regarding a charge after cancellation\n\nI am writing about a charge of NOK 499 made after I cancelled my subscription.\n\nPlease review the charge and explain the contractual basis for it. I refer to the cancellation confirmation and invoice, which I will attach before sending.\n\nIf the charge is incorrect, I request a refund of NOK 499. Please respond in writing within 14 days.\n\nKind regards,\n[Your name]",
   };

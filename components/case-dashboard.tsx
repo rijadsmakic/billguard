@@ -139,7 +139,10 @@ export function CaseDashboard({
                   <Icon size={24} />
                 </span>
                 <div className="case-title">
-                  <span>{categories[c.category]} · DEMO</span>
+                  <span>
+                    {categories[c.category]} ·{" "}
+                    {t("FIKTIV DEMOSAK", "FICTIONAL DEMO CASE")}
+                  </span>
                   <h2>{c.title}</h2>
                   <small>
                     <CalendarDays size={13} />
@@ -175,7 +178,19 @@ export function CaseDashboard({
                             <span className="timeline-dot" />
                           )}
                         </span>
-                        <small>{s}</small>
+                        <small>
+                          {c.scenarioId && i === 1
+                            ? t(
+                                "Dokumenter analysert · demo",
+                                "Documents analyzed · demo",
+                              )
+                            : c.scenarioId && i === 3 && !c.submissionConfirmed
+                              ? t(
+                                  "Klage sendt – krever bekreftelse",
+                                  "Complaint sent — confirmation required",
+                                )
+                              : s}
+                        </small>
                       </div>
                     ))}
                   </div>
@@ -185,11 +200,24 @@ export function CaseDashboard({
                       <select
                         value={c.status}
                         onChange={(e) =>
-                          onUpdate({ ...c, status: Number(e.target.value) })
+                          onUpdate({
+                            ...c,
+                            status: Number(e.target.value),
+                            submissionConfirmed:
+                              Number(e.target.value) < 3
+                                ? false
+                                : c.submissionConfirmed,
+                          })
                         }
                       >
                         {statuses.map((s, i) => (
-                          <option key={s} value={i}>
+                          <option
+                            key={s}
+                            value={i}
+                            disabled={
+                              !!c.scenarioId && !c.submissionConfirmed && i >= 3
+                            }
+                          >
                             {s}
                           </option>
                         ))}
