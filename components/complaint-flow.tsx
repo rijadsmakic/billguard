@@ -515,7 +515,7 @@ export function ComplaintFlow({
     </section>
   );
 }
-function AskBillGuard({ t }: { t: Translate }) {
+export function AskBillGuard({ t }: { t: Translate }) {
   const [question, setQuestion] = useState("");
   const [history, setHistory] = useState<{ q: string; a: string }[]>([]);
   function ask(q: string) {

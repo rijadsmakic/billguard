@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import "./journey.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 

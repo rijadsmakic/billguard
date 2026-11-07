@@ -10,6 +10,7 @@ import { CaseDashboard } from "./case-dashboard";
 import { translate } from "@/lib/translations";
 import { demoScenarios } from "@/lib/demo-scenarios";
 import { DemoCaseDetail } from "./demo-case-detail";
+import { GuidedAssistant } from "./guided-assistant";
 type View = "home" | "complaint" | "cases" | "account" | "demo";
 export function BillGuardApp() {
   const [view, setView] = useState<View>("home");
@@ -18,6 +19,10 @@ export function BillGuardApp() {
   const [category, setCategory] = useState<number | undefined>();
   const [selectedCase, setSelectedCase] = useState<DemoCase | undefined>();
   const [flowKey, setFlowKey] = useState(0);
+  const [journey, setJourney] = useState<{ key: number; started: boolean; category?: number }>({
+    key: 0,
+    started: false,
+  });
   const [cases, setCases] = useState<DemoCase[]>(() =>
     demoScenarios.map((s) => ({
       id: `scenario-${s.id}`,
@@ -53,10 +58,9 @@ export function BillGuardApp() {
     window.scrollTo({ top: 0, behavior: "instant" });
   }
   function start(value?: number) {
-    setCategory(value);
     setSelectedCase(undefined);
-    setFlowKey((k) => k + 1);
-    navigate("complaint");
+    setJourney((j) => ({ key: j.key + 1, started: true, category: value }));
+    navigate("home");
   }
   function save(c: DemoCase) {
     setCases((prev) =>
@@ -136,7 +140,26 @@ export function BillGuardApp() {
               transition={{ duration: 0.22 }}
             >
               {view === "home" ? (
-                <BillGuardLanding t={t} start={start} />
+                <BillGuardLanding
+                  t={t}
+                  start={start}
+                  assistant={
+                    <GuidedAssistant
+                      key={journey.key}
+                      t={t}
+                      initialStage={
+                        !journey.started
+                          ? "welcome"
+                          : journey.category === undefined
+                            ? "category"
+                            : "upload"
+                      }
+                      initialCategory={journey.category}
+                      onSave={save}
+                      onOpenCases={() => navigate("cases")}
+                    />
+                  }
+                />
               ) : view === "complaint" ? (
                 <ComplaintFlow
                   key={flowKey}

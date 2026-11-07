@@ -4,19 +4,14 @@ import {
   ShieldCheck,
   ReceiptText,
   PackageCheck,
-  LockKeyhole,
-  Sparkles,
-  Check,
-  FileText,
   Upload,
   ScanText,
   MessageSquareText,
   Send,
   Route,
-  ArrowUpRight,
 } from "lucide-react";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { BillGuardOrb } from "./billguard-orb";
 import type { Translate } from "./language-selector";
 export const categoryIcons = [ShieldCheck, ReceiptText, PackageCheck];
 export function categoryNames(t: Translate) {
@@ -29,107 +24,16 @@ export function categoryNames(t: Translate) {
 export function BillGuardLanding({
   t,
   start,
+  assistant,
 }: {
   t: Translate;
   start: (category?: number) => void;
+  assistant: ReactNode;
 }) {
   const names = categoryNames(t);
   return (
     <>
-      <section className="hero">
-        <div className="hero-copy">
-          <div className="eyebrow">
-            <span className="status-dot" />
-            {t(
-              "DIN PERSONLIGE AI-FORBRUKERASSISTENT",
-              "YOUR PERSONAL AI CONSUMER ASSISTANT",
-            )}
-          </div>
-          <h1>
-            Your smartest
-            <br />
-            support agent.
-            <span>
-              On your side,
-              <br />
-              every step.
-            </span>
-          </h1>
-          <p className="hero-description">
-            {t(
-              "Fra kompliserte dokumenter til en enklere klageprosess. BillGuard hjelper deg å forstå rettighetene dine, lage klager og følge opp saken – fra start til slutt.",
-              "From complicated documents to a simpler complaint process. BillGuard helps you understand your rights, prepare complaints, and follow your case — from start to finish.",
-            )}
-          </p>
-          <div className="hero-actions">
-            <Button size="lg" onClick={() => start()}>
-              {t("Start en klagesak", "Start a complaint")}
-              <ArrowRight data-icon="inline-end" />
-            </Button>
-            <a className="secondary-link" href="#how-it-works">
-              {t("Se hvordan det fungerer", "See how it works")}
-              <ArrowUpRight size={16} />
-            </a>
-          </div>
-          <div className="trust-line">
-            <span>
-              <ShieldCheck />
-              {t("På din side", "On your side")}
-            </span>
-            <span>
-              <LockKeyhole />
-              {t("Dine data, ditt valg", "Your data, your choice")}
-            </span>
-            <span>
-              <Check />
-              {t("Du har kontrollen", "You stay in control")}
-            </span>
-          </div>
-        </div>
-        <div className="hero-art">
-          <div className="orb-halo" />
-          <BillGuardOrb />
-          <div className="float-card document-float">
-            <span className="mini-icon lilac">
-              <FileText size={21} />
-            </span>
-            <div>
-              <strong>{t("Fra små skrift ...", "From fine print ...")}</strong>
-              <span>{t("til klare svar", "to clear answers")}</span>
-            </div>
-            <span className="file-tick">
-              <Check size={12} />
-            </span>
-          </div>
-          <div className="float-card insight-float">
-            <span className="mini-icon pink">
-              <Sparkles size={20} />
-            </span>
-            <div>
-              <strong>
-                {t("Litt mer oversikt.", "A little more clarity.")}
-              </strong>
-              <span>{t("Mye mindre bekymring.", "A lot less worry.")}</span>
-            </div>
-          </div>
-          <div className="orb-message">
-            <span className="message-spark">
-              <Sparkles size={14} />
-            </span>
-            {t(
-              "Hei! Jeg er BillGuard. Hva trenger du hjelp med?",
-              "Hi! I’m BillGuard. What can I help you with?",
-            )}
-            <span className="message-dot" />
-          </div>
-          <div className="assistant-label">
-            {t(
-              "TEKNOLOGI MED DEG I SENTRUM",
-              "TECHNOLOGY WITH YOU AT THE CENTER",
-            )}
-          </div>
-        </div>
-      </section>
+      {assistant}
       <section className="categories" id="categories">
         <div className="section-intro">
           <div>
