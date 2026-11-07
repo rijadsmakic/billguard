@@ -1,5 +1,5 @@
-import { BillGuardApp } from '@/components/billguard-app'
+import { BillGuardApp } from "@/components/billguard-app";
 
 export default function Page() {
-  return <BillGuardApp />
+  return <BillGuardApp />;
 }
